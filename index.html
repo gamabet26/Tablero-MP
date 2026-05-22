@@ -192,6 +192,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fl"><label>Tipo de unidad</label><div class="ro pend" id="v-unidad">—</div></div>
     <div class="fl"><label>Almacén destino</label><div class="ro pend" id="v-planta">—</div></div>
   </div>
+  <div id="vig-acceso-section">
   <div class="sec" style="margin-top:4px">Control de acceso</div>
   <div class="ts-grid">
     <div>
@@ -210,6 +211,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <span class="tt" id="ts-salida"></span>
       </button>
     </div>
+  </div>
+  </div>
+  <div id="vig-cedis-note" style="display:none" class="info-note">
+    <i class="ti ti-building-store"></i> Entrega a <strong>CEDIS</strong> — el control de acceso no aplica. Solo se registra arranque y fin de descarga en el módulo de Recibo MP.
   </div>
   <button class="btn-save" onclick="guardarVigilancia()"><i class="ti ti-check"></i> Confirmar registro</button>
 </div>
@@ -498,8 +503,10 @@ function selectOC(oc,ctx){
     document.getElementById('v-prov').textContent=lines[0]?lines[0].prov:'—';
     document.getElementById('v-prov').classList.remove('pend');
     const rec=records.find(r=>r.oc===oc);
+    const planta=rec&&rec.planta?rec.planta:'';
     document.getElementById('v-unidad').textContent=rec&&rec.unidad?rec.unidad:'—';
-    document.getElementById('v-planta').textContent=rec&&rec.planta?rec.planta:'—';
+    document.getElementById('v-planta').textContent=planta||'—';
+    toggleVigAcceso(planta);
   } else {
     document.getElementById('r-oc').value=oc;
     document.getElementById('r-oc-display').textContent=oc;
@@ -555,6 +562,12 @@ function guardarCompra(){
   else records.push(rec);
   saveDB();
   alert('✅ OC '+oc+' guardada correctamente.');
+}
+
+function toggleVigAcceso(planta){
+  const esCedis=planta==='CEDIS';
+  document.getElementById('vig-acceso-section').style.display=esCedis?'none':'block';
+  document.getElementById('vig-cedis-note').style.display=esCedis?'flex':'none';
 }
 
 function guardarVigilancia(){
