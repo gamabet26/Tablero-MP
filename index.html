@@ -286,7 +286,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <thead><tr>
         <th>OC #</th><th>Fecha prog.</th><th>Proveedor</th><th>Producto</th>
         <th>Planta</th><th>Unidad</th><th>Entrada</th><th>Salida</th>
-        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th><th>Conf.</th><th>Estado</th>
+        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>        <th>Conf.</th><th>Estado</th><th>⏱ Tiempo desc.</th>
       </tr></thead>
       <tbody id="log-body"></tbody>
     </table>
@@ -578,8 +578,12 @@ function guardarRecibo(){
   if(!oc){alert('Ingresa el número de OC');return}
   const idx=records.findIndex(r=>r.oc===oc);
   if(idx<0){alert('OC no encontrada. Regístrala en Compras primero.');return}
+  const prevArranque=records[idx].arranque;
   records[idx].arranque=stamps['arranque']||records[idx].arranque;
   records[idx].fin=stamps['fin']||records[idx].fin;
+  if(!prevArranque&&records[idx].arranque){
+    switchTab('historial');
+  }
   records[idx].tarimas=document.getElementById('q-tarimas').value;
   records[idx].cajas=document.getElementById('q-cajas').value;
   records[idx].cubetas=document.getElementById('q-cubetas').value;
@@ -588,6 +592,26 @@ function guardarRecibo(){
   records[idx].estado='recibido';
   saveDB();
   alert('✅ Recibo confirmado para OC '+oc);
+}
+
+let logTimer=null;
+let activeTimers={};
+
+function elapsedSince(timeStr){
+  if(!timeStr)return null;
+  const [h,m]=timeStr.split(':').map(Number);
+  const now=new Date();
+  const start=new Date();
+  start.setHours(h,m,0,0);
+  let diff=Math.floor((now-start)/1000);
+  if(diff<0)diff=0;
+  return diff;
+}
+
+function fmtElapsed(secs){
+  const m=Math.floor(secs/60);
+  const s=secs%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 
 function renderLog(){
@@ -599,7 +623,22 @@ function renderLog(){
     return;
   }
   const pm={pendiente:'p-p',dentro:'p-d',fuera:'p-f',recibido:'p-r'};
-  tbody.innerHTML=filtered.map(r=>`<tr>
+  tbody.innerHTML=filtered.map(r=>{
+    let descCell='—';
+    if(r.arranque&&!r.fin){
+      const secs=elapsedSince(r.arranque);
+      const over=secs!==null&&secs>1800;
+      descCell=`<span id="timer-${r.oc}" style="font-weight:600;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">
+        ${secs!==null?fmtElapsed(secs):'00:00'}
+      </span>${over?'<span style="color:#dc2626;font-size:10px;margin-left:4px">⚠ Excedido</span>':''}`;
+    } else if(r.arranque&&r.fin){
+      const [ah,am]=r.arranque.split(':').map(Number);
+      const [fh,fm]=r.fin.split(':').map(Number);
+      const mins=(fh*60+fm)-(ah*60+am);
+      const over=mins>30;
+      descCell=`<span style="font-weight:600;color:${over?'#dc2626':'#16a34a'}">${String(Math.floor(mins)).padStart(2,'0')}:00</span>${over?'<span style="color:#dc2626;font-size:10px;margin-left:4px">⚠ Excedido</span>':''}`;
+    }
+    return`<tr>
     <td><strong>${r.oc}</strong></td>
     <td>${r.fecha||'—'}</td>
     <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.prov||'—'}</td>
@@ -610,7 +649,28 @@ function renderLog(){
     <td>${r.tarimas||'—'}</td><td>${r.cajas||'—'}</td><td>${r.cubetas||'—'}</td>
     <td>${r.confirmacion||'—'}</td>
     <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
-  </tr>`).join('');
+    <td>${descCell}</td>
+  </tr>`;
+  }).join('');
+
+  if(logTimer)clearInterval(logTimer);
+  const hasActive=filtered.some(r=>r.arranque&&!r.fin);
+  if(hasActive){
+    logTimer=setInterval(()=>{
+      filtered.filter(r=>r.arranque&&!r.fin).forEach(r=>{
+        const el=document.getElementById('timer-'+r.oc);
+        if(!el)return;
+        const secs=elapsedSince(r.arranque);
+        if(secs===null)return;
+        const over=secs>1800;
+        el.style.color=over?'#dc2626':'#16a34a';
+        el.textContent=fmtElapsed(secs);
+        const warn=el.nextElementSibling;
+        if(over&&warn)warn.style.display='inline';
+        else if(warn)warn.style.display='none';
+      });
+    },1000);
+  }
 }
 
 function exportarCSV(){
