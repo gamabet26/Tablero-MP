@@ -653,7 +653,7 @@ function renderLog(){
     <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.prov||'—'}</td>
     <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.desc||'—'}</td>
     <td>${r.planta||'—'}</td><td>${r.unidad||'—'}</td>
-    <td>${r.entrada||'—'}</td><td>${r.salida||'—'}</td>
+    <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.entrada||'—')}</td><td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.salida||'—')}</td>
     <td>${r.arranque||'—'}</td><td>${r.fin||'—'}</td>
     <td>${r.tarimas||'—'}</td><td>${r.cajas||'—'}</td><td>${r.cubetas||'—'}</td>
     <td>${r.confirmacion||'—'}</td>
