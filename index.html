@@ -288,7 +288,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <thead><tr>
         <th>OC #</th><th>Fecha prog.</th><th>Proveedor</th><th>Producto</th>
         <th>Planta</th><th>Unidad</th><th>Entrada</th><th>Salida</th>
-        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>        <th>Conf.</th><th>Estado</th><th>⏱ Tiempo desc.</th>
+        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>        <th>Conf.</th><th>Estado</th><th>⏱ Tiempo desc.</th><th>📦 Est. Tarimas</th>
       </tr></thead>
       <tbody id="log-body"></tbody>
     </table>
@@ -651,13 +651,16 @@ document.addEventListener('click',function(e){
 function guardarCompra(){
   const oc=document.getElementById('c-oc').value.trim();
   if(!oc){alert('Ingresa el número de OC');return}
+  const art=document.getElementById('c-art').textContent;
+  const qty=document.getElementById('c-qty').textContent;
+  const tar=calcTarimas(art,qty);
   const idx=records.findIndex(r=>r.oc===oc);
   const rec={
     oc,
     prov:document.getElementById('c-prov').textContent,
     desc:document.getElementById('c-desc').textContent,
-    art:document.getElementById('c-art').textContent,
-    qty:document.getElementById('c-qty').textContent,
+    art,
+    qty,
     fecha:document.getElementById('c-fecha').value,
     hora:document.getElementById('c-hora').value,
     semana:document.getElementById('c-semana').value,
@@ -665,6 +668,9 @@ function guardarCompra(){
     planta:document.getElementById('c-planta').value,
     unidad:document.getElementById('c-unidad').value,
     estado:'pendiente',entrada:'',salida:'',arranque:'',fin:'',
+    tarimas_est: tar ? tar.tarimas : '',
+    tarimas_detalle: tar ? tar.detalle : '',
+    tarimas_pres: tar ? tar.presentacion : '',
     tarimas:'',cajas:'',cubetas:'',confirmacion:'',comentarios:''
   };
   if(idx>=0)records[idx]={...records[idx],...rec};
@@ -732,6 +738,15 @@ function fmtElapsed(secs){
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 
+function recalcTarimasCell(r){
+  if(!r.art||!r.qty)return'—';
+  const tar=calcTarimas(r.art,r.qty);
+  if(!tar)return'—';
+  return`<span style="font-weight:700;color:#1d4ed8">${tar.tarimas}</span>
+    <span style="font-size:10px;color:#64748b"> tar.</span>
+    <div style="font-size:9px;color:#94a3b8">${tar.presentacion}</div>`;
+}
+
 function renderLog(){
   const buscar=(document.getElementById('h-buscar').value||'').toLowerCase();
   const tbody=document.getElementById('log-body');
@@ -768,6 +783,12 @@ function renderLog(){
     <td>${r.confirmacion||'—'}</td>
     <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
     <td>${descCell}</td>
+    <td>${r.tarimas_est
+      ? `<span style="font-weight:700;color:#1d4ed8">${r.tarimas_est}</span>
+         <span style="font-size:10px;color:#64748b"> tar.</span>
+         <div style="font-size:9px;color:#94a3b8">${r.tarimas_pres||''}</div>`
+      : recalcTarimasCell(r)
+    }</td>
   </tr>`;
   }).join('');
 
