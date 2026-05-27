@@ -18,7 +18,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .zf{animation:fillAnim 3s ease-in-out infinite}
 .hdr{background:#0a1628;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10;border-bottom:2px solid #1a3a8f}
 .hdr-logo{display:flex;align-items:center;gap:10px}
-.hdr-logo span{font-size:20px;font-weight:500;letter-spacing:2px;color:#3b5fe0}
 .hdr-title{font-size:15px;font-weight:500;color:#ccd}
 .hdr-date{font-size:12px;color:#889}
 .notice{background:#fef08a;color:#713f12;text-align:center;font-size:11px;font-weight:500;padding:5px 12px;position:relative;z-index:10}
@@ -26,13 +25,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:12px;font-weight:500;color:#7a9cd0;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .tab.active{color:#fff;border-bottom-color:#3b5fe0;background:#162850}
 .tab:hover:not(.active){color:#adc4f0}
-.content{position:relative;z-index:10;padding:16px;max-width:1100px;margin:0 auto}
+.content{position:relative;z-index:10;padding:16px;max-width:1200px;margin:0 auto}
 .panel{display:none}.panel.active{display:block}
 .sec{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
 .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
 .fl{display:flex;flex-direction:column;gap:4px}
 .fl label{font-size:11px;color:#64748b;font-weight:500}
-.fl input,.fl select,.fl textarea{font-size:13px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#1e293b;outline:none;transition:border-color .2s}
+.fl input,.fl select,.fl textarea{font-size:13px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#1e293b;outline:none;transition:border-color .2s;font-family:inherit}
 .fl input:focus,.fl select:focus,.fl textarea:focus{border-color:#3b82f6}
 .fl textarea{resize:vertical;min-height:60px}
 .ro{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:7px 10px;font-size:13px;color:#64748b;min-height:34px}
@@ -52,7 +51,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .qty-c .ut{font-size:10px;color:#94a3b8;margin-top:2px}
 .log-t{width:100%;border-collapse:collapse;font-size:11px}
 .log-t th{background:#f8fafc;color:#64748b;padding:8px;text-align:left;font-weight:600;border-bottom:1px solid #e2e8f0;font-size:10px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.log-t td{padding:7px 8px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:11px}
+.log-t td{padding:7px 8px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:11px;vertical-align:middle}
 .log-t tr:hover td{background:#f8fafc}
 .pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
 .p-d{background:#dcfce7;color:#15803d}.p-f{background:#fee2e2;color:#b91c1c}
@@ -81,6 +80,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .multi-row .mr-desc{color:#1e293b;margin-top:2px}
 .multi-row .mr-qty{color:#64748b;font-size:11px;margin-top:2px}
 .sel-row{border:2px solid #3b82f6 !important;background:#eff6ff !important}
+.tar-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.tar-num{font-size:22px;font-weight:700;color:#1d4ed8}
+.tar-det{font-size:10px;color:#94a3b8;margin-top:3px}
 @media(max-width:600px){
   .hdr-title{display:none}
   .qty-g{grid-template-columns:repeat(2,1fr)}
@@ -108,7 +110,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="hdr">
   <div class="hdr-logo">
-    <span style="font-size:26px;font-weight:700;letter-spacing:3px;color:#3b5fe0;font-family:inherit">zubex</span>
+    <span style="font-size:26px;font-weight:700;letter-spacing:3px;color:#3b5fe0">zubex</span>
   </div>
   <div class="hdr-title">Sistema de Recibo de Materias Primas</div>
   <div class="hdr-date" id="hdr-date"></div>
@@ -146,13 +148,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div id="lines-container"></div>
   </div>
 
-  <div class="fg" id="c-fields" style="display:none">
-    <div class="fl"><label>Número de artículo</label><div class="ro" id="c-art">—</div></div>
-    <div class="fl"><label>Descripción</label><div class="ro" id="c-desc">—</div></div>
-    <div class="fl"><label>Cantidad solicitada</label><div class="ro" id="c-qty">—</div></div>
-    <div class="fl"><label>Tipo de material</label><div class="ro" id="c-tipo">—</div></div>
+  <div id="c-fields" style="display:none">
+    <div class="fg">
+      <div class="fl"><label>Número de artículo</label><div class="ro" id="c-art">—</div></div>
+      <div class="fl"><label>Descripción</label><div class="ro" id="c-desc">—</div></div>
+      <div class="fl"><label>Cantidad solicitada</label><div class="ro" id="c-qty">—</div></div>
+      <div class="fl"><label>Tipo de material</label><div class="ro" id="c-tipo">—</div></div>
+    </div>
+    <div class="tar-box" id="c-tarimas-est" style="display:none">
+      <div style="font-size:11px;font-weight:600;color:#1d4ed8;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">📦 Estimado de tarimas</div>
+      <div id="tar-content"></div>
+    </div>
   </div>
-  <div id="c-tarimas-est" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:14px"></div>
 
   <div class="sec" style="margin-top:4px"><i class="ti ti-calendar"></i> Programación de llegada</div>
   <div class="fg">
@@ -189,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="oc-suggest" id="oc-suggest-vig" style="display:none"></div>
       </div>
     </div>
-    <div class="fl"><label>Proveedor</label><div class="ro pend" id="v-prov">— se carga al ingresar OC</div></div>
+    <div class="fl"><label>Proveedor</label><div class="ro pend" id="v-prov">—</div></div>
     <div class="fl"><label>Tipo de unidad</label><div class="ro pend" id="v-unidad">—</div></div>
     <div class="fl"><label>Almacén destino</label><div class="ro pend" id="v-planta">—</div></div>
   </div>
@@ -215,7 +222,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   </div>
   <div id="vig-cedis-note" style="display:none" class="info-note">
-    <i class="ti ti-building-store"></i> Entrega a <strong>CEDIS</strong> — el control de acceso no aplica. Solo se registra arranque y fin de descarga en el módulo de Recibo MP.
+    <i class="ti ti-building-store"></i> Entrega a <strong>CEDIS</strong> — el control de acceso no aplica. Solo se registra arranque y fin de descarga en Recibo MP.
   </div>
   <button class="btn-save" onclick="guardarVigilancia()"><i class="ti ti-check"></i> Confirmar registro</button>
 </div>
@@ -236,14 +243,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fl"><label>Proveedor</label><div class="ro pend" id="r-prov">—</div></div>
     <div class="fl"><label>Descripción</label><div class="ro pend" id="r-desc">—</div></div>
   </div>
-  <div class="sec">Cantidades recibidas</div>
-  <div class="qty-g">
-    <div class="qty-c"><label>Tarimas</label><input type="number" id="q-tarimas" placeholder="0" min="0"><div class="ut">pzas</div></div>
-    <div class="qty-c"><label>Cajas</label><input type="number" id="q-cajas" placeholder="0" min="0"><div class="ut">pzas</div></div>
-    <div class="qty-c"><label>Cubetas / Tambos</label><input type="number" id="q-cubetas" placeholder="0" min="0"><div class="ut">pzas</div></div>
-    <div class="qty-c"><label>Conf. entrega</label>
-      <select id="q-conf" style="font-size:12px;width:100%;border:none;background:transparent;text-align:center;color:#1e293b;font-family:inherit">
-        <option value="">—</option><option>SI</option><option>NO</option>
+  <div class="sec">📦 Cantidades estimadas</div>
+  <div id="r-tar-box" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;margin-bottom:14px">
+    <div id="r-tar-content"></div>
+  </div>
+  <div id="r-tar-empty" style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#94a3b8;text-align:center">
+    Selecciona una OC para ver el estimado de tarimas
+  </div>
+  <div class="sec" style="margin-top:4px">Confirmación de entrega</div>
+  <div style="margin-bottom:14px">
+    <div class="fl">
+      <label>¿Entrega confirmada?</label>
+      <select id="q-conf" style="font-size:13px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#1e293b;font-family:inherit;max-width:200px">
+        <option value="">— Seleccionar —</option><option>SI</option><option>NO</option>
       </select>
     </div>
   </div>
@@ -288,7 +300,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <thead><tr>
         <th>OC #</th><th>Fecha prog.</th><th>Proveedor</th><th>Producto</th>
         <th>Planta</th><th>Unidad</th><th>Entrada</th><th>Salida</th>
-        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>        <th>Conf.</th><th>Estado</th><th>⏱ Tiempo desc.</th><th>📦 Est. Tarimas</th>
+        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>
+        <th>Conf.</th><th>Estado</th><th>⏱ Desc.</th><th>📦 Est. Tarimas</th>
       </tr></thead>
       <tbody id="log-body"></tbody>
     </table>
@@ -298,6 +311,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
+// ─── TABLERO MP ───────────────────────────────────────────────────────────────
 const TABLERO=[
 {oc:"75985",fecha:"09/27/2024",art:"10-040702-15572-01",qty:"6",cod:"2055",prov:"JAVIER PORTUGAL HACES",desc:"EMB-CINTA-2005-TESA 07446-BLANCA-6MMX14,000M"},
 {oc:"77253",fecha:"12/23/2024",art:"10-040703-16168-01",qty:"18",cod:"2009",prov:"Proveedora Flexografica SA de CV",desc:"EMB-CINTA-2009-TESA 07446-BLANCA-9MM"},
@@ -307,9 +321,9 @@ const TABLERO=[
 {oc:"83208",fecha:"03/05/2026",art:"10-050602-11379-01",qty:"500",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"TAPA-CAJA KFT CON PUNTEADO-945X1210-S/I"},
 {oc:"83208",fecha:"03/05/2026",art:"10-050602-15711-01",qty:"500",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"TAPA-CAJA KFT CON PUNTEADO-945X1210-C/IMP"},
 {oc:"83218",fecha:"03/06/2026",art:"10-050702-05330-01",qty:"416",cod:"2136",prov:"LUVERPACK, SA DE CV",desc:"TARIMA CON TRATAMIENTO-2081-100X120CM"},
-{oc:"83312",fecha:"03/13/2026",art:"10-030702-07077-01",qty:"84",cod:"2125",prov:"POLIREGIO, SA DE CV",desc:"EMB-1700-BOL POLI TRANS CAL175-12\"X39\""},
+{oc:"83312",fecha:"03/13/2026",art:"10-030702-07077-01",qty:"84",cod:"2125",prov:"POLIREGIO, SA DE CV",desc:"EMB-1700-BOL POLI TRANS CAL175-12x39"},
 {oc:"83320",fecha:"03/13/2026",art:"10-010101-16394-01",qty:"5000",cod:"3119",prov:"ASCEND PERFORMANCE MATERIALS INC",desc:"RESINA-3119-HI DURA LUX-H3X-NT0853"},
-{oc:"83343",fecha:"03/17/2026",art:"10-030702-13041-01",qty:"9",cod:"2125",prov:"POLIREGIO, SA DE CV",desc:"EMB-BOLSA POLI CAL175-16\"X43\""},
+{oc:"83343",fecha:"03/17/2026",art:"10-030702-13041-01",qty:"9",cod:"2125",prov:"POLIREGIO, SA DE CV",desc:"EMB-BOLSA POLI CAL175-16x43"},
 {oc:"83383",fecha:"03/19/2026",art:"10-050602-12909-01",qty:"480",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"CAJA KFT CHORIZO 550X226X220"},
 {oc:"83525",fecha:"03/26/2026",art:"10-030301-07003-01",qty:"2550",cod:"2118",prov:"KONOIL, SA DE CV",desc:"SOL-2118-ACEITE MINERAL K-85"},
 {oc:"83486",fecha:"03/27/2026",art:"10-050602-04301-01",qty:"400",cod:"2103",prov:"GPS GLOBAL PACKAGING SUPPLIER SA DE CV",desc:"CAJA P/6 Y 12 STICKS 635X508X685-2047S12"},
@@ -326,15 +340,12 @@ const TABLERO=[
 {oc:"83714",fecha:"04/13/2026",art:"10-010101-11331-01",qty:"150",cod:"3012",prov:"Formerra, LLC",desc:"RESINA-2152-SELAR 3426R-DUP NC010"},
 {oc:"83757",fecha:"04/14/2026",art:"10-020401-11532-01",qty:"34",cod:"2097",prov:"SIEGWERK MEXICO, SA CV",desc:"TINTA-TEST MATERIAL"},
 {oc:"83758",fecha:"04/14/2026",art:"10-020401-11532-01",qty:"170",cod:"2097",prov:"SIEGWERK MEXICO, SA CV",desc:"TINTA-TEST MATERIAL"},
-{oc:"83848",fecha:"04/21/2026",art:"10-030703-05935-01",qty:"15",cod:"2115",prov:"SEALING INTERNATIONAL TAPES, S. DE R.L. DE C.V.",desc:"EMB-2106-MALLA VERDE .46MX1000M"},
-{oc:"83848",fecha:"04/21/2026",art:"10-030703-06863-01",qty:"10",cod:"2115",prov:"SEALING INTERNATIONAL TAPES, S. DE R.L. DE C.V.",desc:"EMB-2115-MALLA NAT CONWED-15CMX1000M"},
-{oc:"83848",fecha:"04/21/2026",art:"10-030703-06864-01",qty:"20",cod:"2115",prov:"SEALING INTERNATIONAL TAPES, S. DE R.L. DE C.V.",desc:"EMB-2115-MALLA NAT CONWED-46CMX1000M"},
-{oc:"83848",fecha:"04/21/2026",art:"10-030703-07514-01",qty:"60",cod:"2115",prov:"SEALING INTERNATIONAL TAPES, S. DE R.L. DE C.V.",desc:"EMB-2115-MALLA BLANCA CONWED-18CMX2286M"},
+{oc:"83848",fecha:"04/21/2026",art:"10-030703-05935-01",qty:"15",cod:"2115",prov:"SEALING INTERNATIONAL TAPES",desc:"EMB-2106-MALLA VERDE .46MX1000M"},
+{oc:"83848",fecha:"04/21/2026",art:"10-030703-06863-01",qty:"10",cod:"2115",prov:"SEALING INTERNATIONAL TAPES",desc:"EMB-2115-MALLA NAT CONWED-15CMX1000M"},
 {oc:"83777",fecha:"04/22/2026",art:"10-020501-04343-01",qty:"316",cod:"2164",prov:"PRODUCTOS INDUSTRIALES SAAR SA DE CV",desc:"SOL-ALCOHOL ETILICO ANHIDRO"},
 {oc:"83782",fecha:"04/22/2026",art:"10-050602-13447-01",qty:"200",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"CAJA-2084-EXP-S/I-10.5X21.5X21"},
 {oc:"83868",fecha:"04/22/2026",art:"10-010101-17311-01",qty:"14000",cod:"2100",prov:"FIRST QUALITY CHEMICALS SA DE CV",desc:"RESINA-2100-EF-12"},
 {oc:"83870",fecha:"04/22/2026",art:"10-020401-11532-01",qty:"160",cod:"2039",prov:"FLINT MEXICANA S DE RL DE CV",desc:"TINTA-TEST MATERIAL"},
-{oc:"83885",fecha:"04/23/2026",art:"10-030702-13430-01",qty:"3",cod:"2125",prov:"POLIREGIO, SA DE CV",desc:"EMB-2125-BOL POLI FUELLE LATERAL S/I"},
 {oc:"83857",fecha:"04/23/2026",art:"10-020401-14722-01",qty:"136",cod:"2097",prov:"SIEGWERK MEXICO, SA CV",desc:"TINTA-2097-SIEGWERK NC 720-1 WARM RED LINE"},
 {oc:"83857",fecha:"04/23/2026",art:"10-020401-14199-01",qty:"187",cod:"2097",prov:"SIEGWERK MEXICO, SA CV",desc:"TINTA-2097-SIEGWERK NC 720-1 BLACK PRO"},
 {oc:"83575",fecha:"04/23/2026",art:"10-020401-07591-01",qty:"576",cod:"2039",prov:"FLINT MEXICANA S DE RL DE CV",desc:"TINTA-2039-FLINT-PRIMER"},
@@ -364,7 +375,7 @@ const TABLERO=[
 {oc:"84075",fecha:"05/14/2026",art:"10-050602-04286-01",qty:"800",cod:"2139",prov:"EMPAQUES CARMA SA DE CV",desc:"SEPARADOR-PARA 12 STICKS 504X670-2047DS12"},
 {oc:"83253",fecha:"05/15/2026",art:"10-010101-05426-01",qty:"10000",cod:"3011",prov:"KURARAY AMERICA, INC.",desc:"RESINA-3026-EVAL-H171B"},
 {oc:"83074",fecha:"05/15/2026",art:"10-010101-12681-01",qty:"5080",cod:"3037",prov:"MITSUI CHEMICALS AMERICA, INC",desc:"RESINA-ADMER-ALC-30"},
-{oc:"83783",fecha:"05/15/2026",art:"10-010101-06865-01",qty:"703",cod:"2151",prov:"NEXEO PLASTICS MEXICO, S. DE R.L. DE C.V.",desc:"RESINA-TEST MATERIAL"},
+{oc:"83783",fecha:"05/15/2026",art:"10-010101-06865-01",qty:"703",cod:"2151",prov:"NEXEO PLASTICS MEXICO",desc:"RESINA-TEST MATERIAL"},
 {oc:"82636",fecha:"05/19/2026",art:"10-010101-12570-01",qty:"23750",cod:"20159",prov:"NUREL SA",desc:"RESINA-NUREL B33LN"},
 {oc:"84188",fecha:"05/19/2026",art:"10-050702-05330-01",qty:"400",cod:"2177",prov:"SOLUCIONES INTEGRALES ISATA SAS CV",desc:"TARIMA CON TRATAMIENTO-2081-100X120CM"},
 {oc:"84132",fecha:"05/19/2026",art:"10-020401-14722-01",qty:"68",cod:"2097",prov:"SIEGWERK MEXICO, SA CV",desc:"TINTA-2097-SIEGWERK NC 720-1 WARM RED LINE"},
@@ -384,12 +395,10 @@ const TABLERO=[
 {oc:"83819",fecha:"05/25/2026",art:"10-010101-10656-01",qty:"2540",cod:"3037",prov:"MITSUI CHEMICALS AMERICA, INC",desc:"RESINA-2107-ADMER-QF551A"},
 {oc:"83869",fecha:"05/25/2026",art:"10-010101-12681-01",qty:"5080",cod:"3037",prov:"MITSUI CHEMICALS AMERICA, INC",desc:"RESINA-ADMER-ALC-30"},
 {oc:"84228",fecha:"05/25/2026",art:"10-050602-04303-01",qty:"100",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"CAJA MEDIANA KRAF C/I 40X40X26"},
-{oc:"84228",fecha:"05/25/2026",art:"10-050602-04286-01",qty:"200",cod:"2084",prov:"PRATT INDUSTRIES DE MONTERREY S DE RL DE CV",desc:"SEPARADOR-PARA 12 STICKS 504X670-2047DS12"},
 {oc:"84229",fecha:"05/25/2026",art:"10-050602-04273-01",qty:"500",cod:"2103",prov:"GPS GLOBAL PACKAGING SUPPLIER SA DE CV",desc:"TAPA-CAJA 2045 KFT 945X1210-C/IMP"},
 {oc:"84229",fecha:"05/25/2026",art:"10-050602-04293-01",qty:"500",cod:"2103",prov:"GPS GLOBAL PACKAGING SUPPLIER SA DE CV",desc:"CAJA-FONDO KFT-750X1330 C/IMP"},
 {oc:"84229",fecha:"05/25/2026",art:"10-050602-04301-01",qty:"200",cod:"2103",prov:"GPS GLOBAL PACKAGING SUPPLIER SA DE CV",desc:"CAJA P/6 Y 12 STICKS 635X508X685"},
 {oc:"84227",fecha:"05/26/2026",art:"10-050602-04273-01",qty:"500",cod:"2139",prov:"EMPAQUES CARMA SA DE CV",desc:"TAPA-CAJA 2045 KFT 945X1210-C/IMP"},
-{oc:"84227",fecha:"05/26/2026",art:"10-050602-04293-01",qty:"500",cod:"2139",prov:"EMPAQUES CARMA SA DE CV",desc:"CAJA-FONDO KFT-750X1330 C/IMP"},
 {oc:"83515",fecha:"05/26/2026",art:"10-010101-15365-01",qty:"19040",cod:"2113",prov:"WE ARE IMPORTACIONES S.A DE C.V",desc:"RESINA-2113-AEGIS H135QP"},
 {oc:"83853",fecha:"05/26/2026",art:"10-010301-15712-01",qty:"200",cod:"2153",prov:"AMPACET DE MEXICO, SA DE CV",desc:"PIG-AMPACET-MARRON-1504661-S"},
 {oc:"83805",fecha:"05/26/2026",art:"10-010301-11866-01",qty:"6000",cod:"2153",prov:"AMPACET DE MEXICO, SA DE CV",desc:"PIG-AMPACET-BLANCO 110025 80% TI02"},
@@ -409,30 +418,130 @@ const TABLERO=[
 {oc:"83685",fecha:"06/15/2026",art:"10-010101-17401-01",qty:"30000",cod:"20158",prov:"CHANNEL PRIME ALLIANCE DE MEXICO S DE RL DE CV",desc:"RESINA-EXCEED FLOW M-1020.RA"},
 {oc:"83637",fecha:"06/15/2026",art:"10-010101-15365-01",qty:"19040",cod:"2113",prov:"WE ARE IMPORTACIONES S.A DE C.V",desc:"RESINA-2113-AEGIS H135QP"},
 {oc:"83655",fecha:"06/16/2026",art:"10-010101-12570-01",qty:"23750",cod:"20159",prov:"NUREL SA",desc:"RESINA-NUREL B33LN"},
-{oc:"83385",fecha:"06/19/2026",art:"10-010101-17304-01",qty:"23750",cod:"20159",prov:"NUREL SA",desc:"RESINA-20159-PROMYDE-BF540-LWB"},
 {oc:"82649",fecha:"06/21/2026",art:"10-010101-10831-01",qty:"22500",cod:"3081",prov:"UBE CORPORATION EUROPE, SAU",desc:"RESINA-3046-UBE NYLON-5033-FDX57"},
 {oc:"82886",fecha:"06/23/2026",art:"10-010101-16602-01",qty:"22500",cod:"3081",prov:"UBE CORPORATION EUROPE, SAU",desc:"RESINA-3081-UBE NYLON-1030B"},
 {oc:"83725",fecha:"06/26/2026",art:"10-010101-10831-01",qty:"22500",cod:"3081",prov:"UBE CORPORATION EUROPE, SAU",desc:"RESINA-3046-UBE NYLON-5033-FDX57"}
 ];
 
-const DB_KEY='zubex_rmp_v2';
+// ─── TABLAS DE CLASIFICACIÓN ──────────────────────────────────────────────────
+// Artículos Gaylor (resina caja 740 kg, 1 caja = 1 tarima)
+const GAYLOR=['10656-01','12681-01','13790-01','15365-01','16776-01'];
+// Artículos Tambo (179 kg, 4 tambos = 1 tarima) — solventes y tintas especiales
+const TAMBO=['04342-01','04343-01','04344-01','04345-01','14836-01','04346-01','06447-01'];
+
+function artKey(art){
+  // extrae últimos 8 chars: "15365-01"
+  const m = art ? art.match(/(\d{5}-\d{2})$/) : null;
+  return m ? m[1] : '';
+}
+
+function subfamilia(art){
+  // formato 10-AABBCC-NNNNN-01 → BB = chars 5-6
+  const m = art ? art.match(/^\d{2}-\d{2}(\d{2})\d{2}-/) : null;
+  return m ? m[1] : '';
+}
+
+function getTipo(art, desc){
+  const sf = subfamilia(art);
+  if(sf==='01') return {label:'RESINA',   cls:'tag-resina'};
+  if(sf==='02') return {label:'ADITIVO',  cls:'tag-adit'};
+  if(sf==='03') return {label:'PIGMENTO', cls:'tag-adit'};
+  if(sf==='04') return {label:'TINTA',    cls:'tag-tinta'};
+  if(sf==='05') return {label:'SOLVENTE', cls:'tag-sol'};
+  if(sf==='06') return {label:'CARTÓN',   cls:'tag-emp'};
+  if(sf==='07') return {label:'EMBALAJE', cls:'tag-emp'};
+  if(sf==='08') return {label:'CONSUMIBLE',cls:'tag-otro'};
+  // fallback descripción
+  const d=(desc||'').toUpperCase();
+  if(d.startsWith('RESINA')) return {label:'RESINA',  cls:'tag-resina'};
+  if(d.startsWith('TINTA'))  return {label:'TINTA',   cls:'tag-tinta'};
+  if(d.startsWith('SOL'))    return {label:'SOLVENTE',cls:'tag-sol'};
+  if(d.startsWith('ADITIVO')||d.startsWith('PIG')) return {label:'ADITIVO',cls:'tag-adit'};
+  return {label:'OTRO', cls:'tag-otro'};
+}
+
+function calcTarimas(art, qty){
+  const sf  = subfamilia(art);
+  const key = artKey(art);
+  const q   = parseFloat((qty||'0').toString().replace(/,/g,''));
+  if(!sf || isNaN(q) || q<=0) return null;
+
+  // RESINAS (sf=01)
+  if(sf==='01'){
+    if(GAYLOR.includes(key)){
+      const t=q/740;
+      return {tarimas:Math.ceil(t), presentacion:'Gaylor 740 kg',
+              detalle:`${q.toLocaleString()} kg ÷ 740 kg/caja = ${t.toFixed(2)} cajas`};
+    } else {
+      const costales=q/25, t=costales/28;
+      return {tarimas:Math.ceil(t), presentacion:'Costal 25 kg',
+              detalle:`${q.toLocaleString()} kg ÷ 25 = ${Math.ceil(costales)} costales ÷ 28/tarima`};
+    }
+  }
+  // TINTAS (sf=04)
+  if(sf==='04'){
+    if(TAMBO.includes(key)){
+      const tambos=q/179, t=tambos/4;
+      return {tarimas:Math.ceil(t), presentacion:'Tambo 179 kg',
+              detalle:`${q} kg ÷ 179 = ${tambos.toFixed(1)} tambos ÷ 4/tarima`};
+    } else {
+      const cubetas=q/17, t=cubetas/34;
+      return {tarimas:Math.ceil(t), presentacion:'Cubeta 17 kg',
+              detalle:`${q} kg ÷ 17 = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`};
+    }
+  }
+  // SOLVENTES (sf=05)
+  if(sf==='05'){
+    if(TAMBO.includes(key)){
+      const tambos=q/179, t=tambos/4;
+      return {tarimas:Math.ceil(t), presentacion:'Tambo 179 kg',
+              detalle:`${q} kg ÷ 179 = ${tambos.toFixed(1)} tambos ÷ 4/tarima`};
+    } else {
+      const cubetas=q/17, t=cubetas/34;
+      return {tarimas:Math.ceil(t), presentacion:'Cubeta 17 kg',
+              detalle:`${q} kg ÷ 17 = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`};
+    }
+  }
+  // ADITIVOS / PIGMENTOS (sf=02,03)
+  if(sf==='02'||sf==='03'){
+    const costales=q/25, t=costales/40;
+    return {tarimas:Math.ceil(t), presentacion:'Costal 25 kg',
+            detalle:`${q} kg ÷ 25 = ${Math.ceil(costales)} costales ÷ 40/tarima`};
+  }
+  // CARTÓN (sf=06)
+  if(sf==='06'){
+    const paq=q/100, t=paq/10;
+    return {tarimas:Math.ceil(t), presentacion:'Paquete 100 pzs',
+            detalle:`${q} pzs ÷ 100 = ${paq.toFixed(1)} paquetes ÷ 10/tarima`};
+  }
+  // EMBALAJE bolsas (sf=07)
+  if(sf==='07'){
+    const cajas=q/1500;
+    return {tarimas:Math.ceil(cajas), presentacion:'Caja 1500 pzs',
+            detalle:`${q} pzs ÷ 1500 = ${cajas.toFixed(2)} cajas`};
+  }
+  return null;
+}
+
+// ─── DB / UTILS ───────────────────────────────────────────────────────────────
+const DB_KEY='zubex_rmp_v3';
 let records=[];
 try{records=JSON.parse(localStorage.getItem(DB_KEY)||'[]')}catch(e){}
-function saveDB(){try{localStorage.setItem(DB_KEY,JSON.stringify(records))}catch(e){}}
+function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(records))}
 
-function now(){return new Date().toTimeString().slice(0,5)}
-function today(){return new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}
-document.getElementById('hdr-date').textContent=today();
+function nowTime(){return new Date().toTimeString().slice(0,5)}
+function todayStr(){return new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}
+document.getElementById('hdr-date').textContent=todayStr();
 
 const stamps={};
 function stampTime(id){
-  const t=now();stamps[id]=t;
+  const t=nowTime(); stamps[id]=t;
   const btn=document.getElementById('btn-'+id);
   btn.classList.add('stamped');
   const el=document.getElementById('ts-'+id);
-  if(el)el.textContent=t;
+  if(el) el.textContent=t;
   const ic=btn.querySelector('i');
-  if(ic)ic.className='ti ti-check';
+  if(ic) ic.className='ti ti-check';
 }
 
 function switchTab(n){
@@ -440,176 +549,62 @@ function switchTab(n){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
-  if(n==='historial')renderLog();
+  if(n==='historial') renderLog();
 }
 
-// Artículos Gaylor (resina en caja 740kg, 1 caja = 1 tarima)
-const GAYLOR_KEYS=['10656-01','12681-01','13790-01','15365-01','16776-01'];
-// Artículos Tambo (solventes/tintas 179kg, 4 tambos = 1 tarima)
-const TAMBO_KEYS=['04342-01','04343-01','04344-01','04345-01','14836-01','04346-01','06447-01'];
-
-function getArticuloKey(art){
-  // extrae los últimos 8 chars tipo "15365-01"
-  const m=art.match(/(\d{5}-\d{2})$/);
-  return m?m[1]:null;
-}
-
-function getSubfamilia(art){
-  // 10-AABBCC-NNNNN-01 → BB = posición 5-6
-  const m=art.match(/^\d{2}-(\d{2})(\d{2})(\d{2})-/);
-  if(!m)return null;
-  return{familia:m[1],subfamilia:m[2],unidad:m[3]};
-}
-
-function getTipo(desc,art){
-  if(art){
-    const sf=getSubfamilia(art);
-    if(sf){
-      if(sf.subfamilia==='01')return{label:'RESINA',cls:'tag-resina'};
-      if(sf.subfamilia==='02')return{label:'ADITIVO',cls:'tag-adit'};
-      if(sf.subfamilia==='03')return{label:'PIGMENTO',cls:'tag-adit'};
-      if(sf.subfamilia==='04')return{label:'TINTA',cls:'tag-tinta'};
-      if(sf.subfamilia==='05')return{label:'SOLVENTE',cls:'tag-sol'};
-      if(sf.subfamilia==='06')return{label:'CARTÓN',cls:'tag-emp'};
-      if(sf.subfamilia==='07')return{label:'EMBALAJE',cls:'tag-emp'};
-      if(sf.subfamilia==='08')return{label:'CONSUMIBLE',cls:'tag-otro'};
-    }
-  }
-  // fallback por descripción
-  const d=(desc||'').toUpperCase();
-  if(d.startsWith('RESINA'))return{label:'RESINA',cls:'tag-resina'};
-  if(d.startsWith('TINTA'))return{label:'TINTA',cls:'tag-tinta'};
-  if(d.startsWith('EMB')||d.startsWith('CAJA')||d.startsWith('TAPA')||d.startsWith('SEPARADOR')||d.startsWith('TARIMA')||d.startsWith('CARTON')||d.startsWith('EMPAQUE'))return{label:'EMPAQUE',cls:'tag-emp'};
-  if(d.startsWith('SOL'))return{label:'SOLVENTE',cls:'tag-sol'};
-  if(d.startsWith('ADITIVO')||d.startsWith('PIG'))return{label:'ADITIVO',cls:'tag-adit'};
-  return{label:'OTRO',cls:'tag-otro'};
-}
-
-function calcTarimas(art, qty){
-  const sf=getSubfamilia(art);
-  const key=getArticuloKey(art);
-  const q=parseFloat((qty||'0').toString().replace(/,/g,''));
-  if(!sf||isNaN(q)||q<=0)return null;
-
-  const sub=sf.subfamilia;
-
-  // RESINAS
-  if(sub==='01'){
-    if(GAYLOR_KEYS.includes(key)){
-      // Gaylor: 1 caja = 740 kg = 1 tarima → tarimas = kg / 740
-      const t=q/740;
-      return{tarimas:Math.ceil(t),detalle:`${q.toLocaleString()} kg ÷ 740 kg/caja = ${t.toFixed(1)} cajas Gaylor`,presentacion:'Gaylor'};
-    } else {
-      // Costal 25 kg, 28 costales/tarima → tarimas = kg / (25×28)
-      const costales=q/25;
-      const t=costales/28;
-      return{tarimas:Math.ceil(t),detalle:`${q.toLocaleString()} kg ÷ 25 kg/costal = ${Math.ceil(costales)} costales ÷ 28/tarima = ${t.toFixed(1)} tarimas`,presentacion:'Costal 25 kg'};
-    }
-  }
-
-  // TINTAS
-  if(sub==='04'){
-    if(TAMBO_KEYS.includes(key)){
-      const t=q/4;
-      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 179 kg/tambo = ${(q/179).toFixed(1)} tambos ÷ 4/tarima`,presentacion:'Tambo 179 kg'};
-    } else {
-      // cubeta 17 kg, 34 cubetas/tarima
-      const cubetas=q/17;
-      const t=cubetas/34;
-      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 17 kg/cubeta = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`,presentacion:'Cubeta 17 kg'};
-    }
-  }
-
-  // SOLVENTES
-  if(sub==='05'){
-    if(TAMBO_KEYS.includes(key)){
-      const tambos=q/179;
-      const t=tambos/4;
-      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 179 kg/tambo = ${tambos.toFixed(1)} tambos ÷ 4/tarima`,presentacion:'Tambo 179 kg'};
-    } else {
-      const cubetas=q/17;
-      const t=cubetas/34;
-      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 17 kg/cubeta = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`,presentacion:'Cubeta 17 kg'};
-    }
-  }
-
-  // ADITIVOS / PIGMENTOS
-  if(sub==='02'||sub==='03'){
-    const costales=q/25;
-    const t=costales/40;
-    return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 25 kg/costal = ${Math.ceil(costales)} costales ÷ 40/tarima`,presentacion:'Costal 25 kg'};
-  }
-
-  // CARTÓN
-  if(sub==='06'){
-    const paquetes=q/100;
-    const t=paquetes/10;
-    return{tarimas:Math.ceil(t),detalle:`${q} pzs ÷ 100 pzs/paquete = ${paquetes.toFixed(1)} paquetes ÷ 10/tarima`,presentacion:'Paquete 100 pzs'};
-  }
-
-  // EMBALAJE (bolsas)
-  if(sub==='07'){
-    const cajas=q/1500;
-    const t=Math.ceil(cajas);
-    return{tarimas:t,detalle:`${q} pzs ÷ 1500 pzs/caja ≈ ${cajas.toFixed(1)} cajas ≈ ${t} tarimas`,presentacion:'Caja 1500 pzs'};
-  }
-
-  return null;
-}
-
-function getByOC(oc){return TABLERO.filter(r=>r.oc===oc.trim())}
-
-const selectedLine={};
-
-function buscarOC(val,ctx){
-  const sgId=ctx==='compras'?'oc-suggest':ctx==='vig'?'oc-suggest-vig':'oc-suggest-rec';
-  const sg=document.getElementById(sgId);
+// ─── BÚSQUEDA OC ─────────────────────────────────────────────────────────────
+function buscarOC(val, ctx){
+  const sgId = ctx==='compras'?'oc-suggest': ctx==='vig'?'oc-suggest-vig':'oc-suggest-rec';
+  const sg = document.getElementById(sgId);
   if(!val||val.length<3){sg.style.display='none';return}
-  const byOC=TABLERO.filter(r=>r.oc.includes(val));
-  const byProv=TABLERO.filter(r=>r.prov.toLowerCase().includes(val.toLowerCase()));
-  const all=[...new Map([...byOC,...byProv].map(r=>[r.oc,r])).values()].slice(0,8);
+  const byOC   = TABLERO.filter(r=>r.oc.includes(val));
+  const byProv = TABLERO.filter(r=>r.prov.toLowerCase().includes(val.toLowerCase()));
+  const all = [...new Map([...byOC,...byProv].map(r=>[r.oc,r])).values()].slice(0,8);
   if(!all.length){sg.style.display='none';return}
-      sg.innerHTML=all.map(r=>{
-    const tipo=getTipo(r.desc,r.art);
+  sg.innerHTML = all.map(r=>{
+    const tipo=getTipo(r.art,r.desc);
     const tar=calcTarimas(r.art,r.qty);
-    return`<div class="oc-item" onclick="selectOC('${r.oc}','${ctx}')">
-    <span class="oc-num">OC ${r.oc}</span>
-    <span class="tipo-tag ${tipo.cls}">${tipo.label}</span>
-    ${tar?`<span style="font-size:10px;background:#fef9c3;color:#a16207;padding:1px 6px;border-radius:4px;font-weight:600;margin-left:4px">~${tar.tarimas} tarima${tar.tarimas!==1?'s':''}</span>`:''}
-    <div class="oc-info">${r.prov}</div>
-    <div class="oc-info">${r.desc.substring(0,55)}${r.desc.length>55?'...':''}</div>
-  </div>`;}).join('');
+    return `<div class="oc-item" onclick="selectOC('${r.oc}','${ctx}')">
+      <span class="oc-num">OC ${r.oc}</span>
+      <span class="tipo-tag ${tipo.cls}">${tipo.label}</span>
+      ${tar?`<span style="font-size:10px;background:#fef9c3;color:#a16207;padding:1px 6px;border-radius:4px;font-weight:600;margin-left:4px">~${tar.tarimas} tar.</span>`:''}
+      <div class="oc-info">${r.prov}</div>
+      <div class="oc-info">${r.desc.substring(0,55)}${r.desc.length>55?'...':''}</div>
+    </div>`;
+  }).join('');
   sg.style.display='block';
 }
 
-function selectOC(oc,ctx){
-  const lines=getByOC(oc);
-  ['oc-suggest','oc-suggest-vig','oc-suggest-rec'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.style.display='none';
-  });
+const selectedLines={};
+
+function selectOC(oc, ctx){
+  document.querySelectorAll('.oc-suggest').forEach(s=>s.style.display='none');
+  const lines = TABLERO.filter(r=>r.oc===oc);
+  if(!lines.length) return;
+
   if(ctx==='compras'){
     document.getElementById('c-oc').value=oc;
-    document.getElementById('c-prov').textContent=lines[0]?lines[0].prov:'—';
+    document.getElementById('c-prov').textContent=lines[0].prov;
     document.getElementById('c-prov').classList.remove('pend');
     if(lines.length===1){
-      fillComprasFields(lines[0]);
       document.getElementById('multi-lines').style.display='none';
+      fillComprasFields(lines[0]);
     } else {
       document.getElementById('c-fields').style.display='none';
+      document.getElementById('c-tarimas-est').style.display='none';
       document.getElementById('multi-lines').style.display='block';
-      selectedLine[oc]=lines;
+      selectedLines[oc]=lines;
       document.getElementById('lines-container').innerHTML=lines.map((l,i)=>`
         <div class="multi-row" id="ml-${i}" onclick="pickLine(${i},'${oc}')">
           <span class="mr-num">Línea ${i+1}</span>
-          <span class="tipo-tag ${getTipo(l.desc).cls}">${getTipo(l.desc).label}</span>
+          <span class="tipo-tag ${getTipo(l.art,l.desc).cls}">${getTipo(l.art,l.desc).label}</span>
           <div class="mr-desc">${l.desc}</div>
-          <div class="mr-qty">Cant: ${l.qty} &nbsp;|&nbsp; Art: ${l.art}</div>
+          <div class="mr-qty">Cant: ${l.qty} | Art: ${l.art}</div>
         </div>`).join('');
     }
   } else if(ctx==='vig'){
     document.getElementById('v-oc').value=oc;
-    document.getElementById('v-prov').textContent=lines[0]?lines[0].prov:'—';
+    document.getElementById('v-prov').textContent=lines[0].prov;
     document.getElementById('v-prov').classList.remove('pend');
     const rec=records.find(r=>r.oc===oc);
     const planta=rec&&rec.planta?rec.planta:'';
@@ -620,69 +615,105 @@ function selectOC(oc,ctx){
     document.getElementById('r-oc').value=oc;
     document.getElementById('r-oc-display').textContent=oc;
     const rec=records.find(r=>r.oc===oc);
-    document.getElementById('r-prov').textContent=lines[0]?lines[0].prov:'—';
+    document.getElementById('r-prov').textContent=lines[0].prov;
     document.getElementById('r-prov').classList.remove('pend');
-    document.getElementById('r-desc').textContent=rec&&rec.desc?rec.desc:(lines[0]?lines[0].desc:'—');
+    document.getElementById('r-desc').textContent=rec&&rec.desc?rec.desc:lines[0].desc;
     document.getElementById('r-desc').classList.remove('pend');
+    // estimado tarimas
+    const art = rec&&rec.art ? rec.art : lines[0].art;
+    const qty = rec&&rec.qty ? rec.qty : lines[0].qty;
+    const tar = calcTarimas(art, qty);
+    const box = document.getElementById('r-tar-box');
+    const emp = document.getElementById('r-tar-empty');
+    const con = document.getElementById('r-tar-content');
+    if(tar){
+      con.innerHTML=`
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+          <span style="font-size:28px;font-weight:700;color:#1d4ed8">${tar.tarimas}</span>
+          <span style="font-size:14px;color:#1e293b;font-weight:500">tarima${tar.tarimas!==1?'s':''} estimada${tar.tarimas!==1?'s':''}</span>
+          <span style="font-size:11px;background:#dbeafe;color:#1d4ed8;padding:2px 10px;border-radius:4px;font-weight:600">${tar.presentacion}</span>
+        </div>
+        <div style="font-size:11px;color:#64748b">${tar.detalle}</div>`;
+      box.style.display='block';
+      emp.style.display='none';
+    } else {
+      box.style.display='none';
+      emp.style.display='block';
+    }
   }
 }
 
-function pickLine(idx,oc){
+function pickLine(idx, oc){
   document.querySelectorAll('.multi-row').forEach(el=>el.classList.remove('sel-row'));
   document.getElementById('ml-'+idx).classList.add('sel-row');
-  fillComprasFields(selectedLine[oc][idx]);
+  fillComprasFields(selectedLines[oc][idx]);
 }
 
 function fillComprasFields(line){
-  document.getElementById('c-fields').style.display='grid';
-  document.getElementById('c-art').textContent=line.art;
-  document.getElementById('c-desc').textContent=line.desc;
-  document.getElementById('c-qty').textContent=line.qty;
-  const t=getTipo(line.desc);
-  document.getElementById('c-tipo').innerHTML=`<span class="tipo-tag ${t.cls}">${t.label}</span>`;
+  document.getElementById('c-fields').style.display='block';
+  document.getElementById('c-art').textContent  = line.art;
+  document.getElementById('c-desc').textContent = line.desc;
+  document.getElementById('c-qty').textContent  = line.qty;
+  const t = getTipo(line.art, line.desc);
+  document.getElementById('c-tipo').innerHTML = `<span class="tipo-tag ${t.cls}">${t.label}</span>`;
+
+  const tar = calcTarimas(line.art, line.qty);
+  const box = document.getElementById('c-tarimas-est');
+  const con = document.getElementById('tar-content');
+  if(tar){
+    con.innerHTML = `
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+        <span class="tar-num">${tar.tarimas}</span>
+        <span style="font-size:13px;color:#1e293b;font-weight:500">tarima${tar.tarimas!==1?'s':''} estimada${tar.tarimas!==1?'s':''}</span>
+        <span style="font-size:11px;background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px">${tar.presentacion}</span>
+      </div>
+      <div class="tar-det">${tar.detalle}</div>`;
+    box.style.display='block';
+  } else {
+    box.style.display='none';
+  }
 }
 
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.oc-wrap')){
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.oc-wrap'))
     document.querySelectorAll('.oc-suggest').forEach(s=>s.style.display='none');
-  }
 });
 
+// ─── VIGILANCIA ───────────────────────────────────────────────────────────────
+function toggleVigAcceso(planta){
+  const esCedis = planta==='CEDIS';
+  document.getElementById('vig-acceso-section').style.display = esCedis?'none':'block';
+  document.getElementById('vig-cedis-note').style.display     = esCedis?'flex':'none';
+}
+
+// ─── GUARDAR ──────────────────────────────────────────────────────────────────
 function guardarCompra(){
   const oc=document.getElementById('c-oc').value.trim();
   if(!oc){alert('Ingresa el número de OC');return}
-  const art=document.getElementById('c-art').textContent;
-  const qty=document.getElementById('c-qty').textContent;
+  const art=document.getElementById('c-art').textContent.trim();
+  const qty=document.getElementById('c-qty').textContent.trim();
   const tar=calcTarimas(art,qty);
   const idx=records.findIndex(r=>r.oc===oc);
   const rec={
-    oc,
-    prov:document.getElementById('c-prov').textContent,
-    desc:document.getElementById('c-desc').textContent,
-    art,
-    qty,
-    fecha:document.getElementById('c-fecha').value,
-    hora:document.getElementById('c-hora').value,
+    oc, art, qty,
+    prov: document.getElementById('c-prov').textContent,
+    desc: document.getElementById('c-desc').textContent,
+    fecha: document.getElementById('c-fecha').value,
+    hora:  document.getElementById('c-hora').value,
     semana:document.getElementById('c-semana').value,
-    mes:document.getElementById('c-mes').value,
+    mes:   document.getElementById('c-mes').value,
     planta:document.getElementById('c-planta').value,
     unidad:document.getElementById('c-unidad').value,
-    estado:'pendiente',entrada:'',salida:'',arranque:'',fin:'',
-    tarimas_est: tar ? tar.tarimas : '',
-    tarimas_detalle: tar ? tar.detalle : '',
-    tarimas_pres: tar ? tar.presentacion : '',
-    tarimas:'',cajas:'',cubetas:'',confirmacion:'',comentarios:''
+    estado:'pendiente', entrada:'', salida:'', arranque:'', fin:'',
+    tar_est: tar?tar.tarimas:'',
+    tar_pres: tar?tar.presentacion:'',
+    tar_det:  tar?tar.detalle:'',
+    tarimas:'', cajas:'', cubetas:'', confirmacion:'', comentarios:''
   };
-  if(idx>=0)records[idx]={...records[idx],...rec};
+  if(idx>=0) records[idx]={...records[idx],...rec};
   else records.push(rec);
   saveDB();
   alert('✅ OC '+oc+' guardada correctamente.');
-}
-
-function toggleVigAcceso(planta){
-  const esCedis=planta==='CEDIS';
-  document.getElementById('vig-acceso-section').style.display=esCedis?'none':'block';
-  document.getElementById('vig-cedis-note').style.display=esCedis?'flex':'none';
 }
 
 function guardarVigilancia(){
@@ -690,9 +721,9 @@ function guardarVigilancia(){
   if(!oc){alert('Ingresa el número de OC');return}
   const idx=records.findIndex(r=>r.oc===oc);
   if(idx<0){alert('OC no encontrada. Regístrala en Compras primero.');return}
-  records[idx].entrada=stamps['entrada']||records[idx].entrada;
-  records[idx].salida=stamps['salida']||records[idx].salida;
-  records[idx].estado=records[idx].salida?'fuera':'dentro';
+  records[idx].entrada = stamps['entrada']||records[idx].entrada;
+  records[idx].salida  = stamps['salida'] ||records[idx].salida;
+  records[idx].estado  = records[idx].salida?'fuera':'dentro';
   saveDB();
   alert('✅ Acceso registrado para OC '+oc);
 }
@@ -702,111 +733,110 @@ function guardarRecibo(){
   if(!oc){alert('Ingresa el número de OC');return}
   const idx=records.findIndex(r=>r.oc===oc);
   if(idx<0){alert('OC no encontrada. Regístrala en Compras primero.');return}
-  const prevArranque=records[idx].arranque;
-  records[idx].arranque=stamps['arranque']||records[idx].arranque;
-  records[idx].fin=stamps['fin']||records[idx].fin;
-  if(!prevArranque&&records[idx].arranque){
-    switchTab('historial');
+  const prevArr=records[idx].arranque;
+  records[idx].arranque     = stamps['arranque']||records[idx].arranque;
+  records[idx].fin          = stamps['fin']     ||records[idx].fin;
+  records[idx].confirmacion = document.getElementById('q-conf').value;
+  records[idx].comentarios  = document.getElementById('r-coments').value;
+  records[idx].estado       = 'recibido';
+  // copiar estimado de tarimas al registro si no lo tiene aún
+  if(!records[idx].tar_est && records[idx].art){
+    const tar=calcTarimas(records[idx].art, records[idx].qty);
+    if(tar){
+      records[idx].tar_est  = tar.tarimas;
+      records[idx].tar_pres = tar.presentacion;
+      records[idx].tar_det  = tar.detalle;
+    }
   }
-  records[idx].tarimas=document.getElementById('q-tarimas').value;
-  records[idx].cajas=document.getElementById('q-cajas').value;
-  records[idx].cubetas=document.getElementById('q-cubetas').value;
-  records[idx].confirmacion=document.getElementById('q-conf').value;
-  records[idx].comentarios=document.getElementById('r-coments').value;
-  records[idx].estado='recibido';
   saveDB();
-  alert('✅ Recibo confirmado para OC '+oc);
+  if(!prevArr && records[idx].arranque) switchTab('historial');
+  else alert('✅ Recibo confirmado para OC '+oc);
 }
 
+// ─── HISTORIAL ────────────────────────────────────────────────────────────────
 let logTimer=null;
-let activeTimers={};
 
-function elapsedSince(timeStr){
-  if(!timeStr)return null;
+function elapsedSecs(timeStr){
+  if(!timeStr) return null;
   const [h,m]=timeStr.split(':').map(Number);
-  const now=new Date();
-  const start=new Date();
+  const now=new Date(), start=new Date();
   start.setHours(h,m,0,0);
-  let diff=Math.floor((now-start)/1000);
-  if(diff<0)diff=0;
-  return diff;
+  let d=Math.floor((now-start)/1000);
+  return d<0?0:d;
 }
-
-function fmtElapsed(secs){
-  const m=Math.floor(secs/60);
-  const s=secs%60;
-  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-
-function recalcTarimasCell(r){
-  if(!r.art||!r.qty)return'—';
-  const tar=calcTarimas(r.art,r.qty);
-  if(!tar)return'—';
-  return`<span style="font-weight:700;color:#1d4ed8">${tar.tarimas}</span>
-    <span style="font-size:10px;color:#64748b"> tar.</span>
-    <div style="font-size:9px;color:#94a3b8">${tar.presentacion}</div>`;
+function fmtSecs(s){
+  return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 }
 
 function renderLog(){
+  if(logTimer){clearInterval(logTimer);logTimer=null;}
   const buscar=(document.getElementById('h-buscar').value||'').toLowerCase();
   const tbody=document.getElementById('log-body');
   const filtered=records.filter(r=>!buscar||r.oc.includes(buscar)||(r.prov||'').toLowerCase().includes(buscar));
   if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="15" style="text-align:center;color:#94a3b8;padding:24px;font-size:12px">Sin registros aún. Los datos guardados aparecerán aquí.</td></tr>';
+    tbody.innerHTML='<tr><td colspan="17" style="text-align:center;color:#94a3b8;padding:24px;font-size:12px">Sin registros aún.</td></tr>';
     return;
   }
   const pm={pendiente:'p-p',dentro:'p-d',fuera:'p-f',recibido:'p-r'};
+
   tbody.innerHTML=filtered.map(r=>{
-    let descCell='—';
-    if(r.arranque&&!r.fin){
-      const secs=elapsedSince(r.arranque);
-      const over=secs!==null&&secs>1800;
-      descCell=`<span id="timer-${r.oc}" style="font-weight:600;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">
-        ${secs!==null?fmtElapsed(secs):'00:00'}
-      </span>${over?'<span style="color:#dc2626;font-size:10px;margin-left:4px">⚠ Excedido</span>':''}`;
-    } else if(r.arranque&&r.fin){
+    // columna tiempo descarga
+    let tiempoCell='—';
+    if(r.arranque && !r.fin){
+      const s=elapsedSecs(r.arranque);
+      const over=s!==null&&s>1800;
+      tiempoCell=`<span id="tmr-${r.oc}" style="font-weight:600;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">${s!==null?fmtSecs(s):'00:00'}</span>${over?'<span style="color:#dc2626;font-size:9px;margin-left:3px">⚠Excedido</span>':'<span id="twrn-'+r.oc+'" style="display:none;color:#dc2626;font-size:9px;margin-left:3px">⚠Excedido</span>'}`;
+    } else if(r.arranque && r.fin){
       const [ah,am]=r.arranque.split(':').map(Number);
       const [fh,fm]=r.fin.split(':').map(Number);
       const mins=(fh*60+fm)-(ah*60+am);
       const over=mins>30;
-      descCell=`<span style="font-weight:600;color:${over?'#dc2626':'#16a34a'}">${String(Math.floor(mins)).padStart(2,'0')}:00</span>${over?'<span style="color:#dc2626;font-size:10px;margin-left:4px">⚠ Excedido</span>':''}`;
+      tiempoCell=`<span style="font-weight:600;color:${over?'#dc2626':'#16a34a'}">${String(mins).padStart(2,'0')}m</span>${over?' <span style="color:#dc2626;font-size:9px">⚠Excedido</span>':''}`;
     }
-    return`<tr>
-    <td><strong>${r.oc}</strong></td>
-    <td>${r.fecha||'—'}</td>
-    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.prov||'—'}</td>
-    <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.desc||'—'}</td>
-    <td>${r.planta||'—'}</td><td>${r.unidad||'—'}</td>
-    <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.entrada||'—')}</td><td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.salida||'—')}</td>
-    <td>${r.arranque||'—'}</td><td>${r.fin||'—'}</td>
-    <td>${r.tarimas||'—'}</td><td>${r.cajas||'—'}</td><td>${r.cubetas||'—'}</td>
-    <td>${r.confirmacion||'—'}</td>
-    <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
-    <td>${descCell}</td>
-    <td>${r.tarimas_est
-      ? `<span style="font-weight:700;color:#1d4ed8">${r.tarimas_est}</span>
-         <span style="font-size:10px;color:#64748b"> tar.</span>
-         <div style="font-size:9px;color:#94a3b8">${r.tarimas_pres||''}</div>`
-      : recalcTarimasCell(r)
-    }</td>
-  </tr>`;
+
+    // columna est. tarimas — usar guardado o recalcular
+    let tarCell='—';
+    const tNum  = r.tar_est  || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.tarimas:null; })();
+    const tPres = r.tar_pres || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.presentacion:''; })();
+    if(tNum){
+      tarCell=`<span style="font-weight:700;color:#1d4ed8;font-size:13px">${tNum}</span> <span style="font-size:10px;color:#64748b">tar.</span><div style="font-size:9px;color:#94a3b8">${tPres}</div>`;
+    }
+
+    return `<tr>
+      <td><strong>${r.oc}</strong></td>
+      <td>${r.fecha||'—'}</td>
+      <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.prov||''}">${r.prov||'—'}</td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
+      <td>${r.planta||'—'}</td>
+      <td>${r.unidad||'—'}</td>
+      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.entrada||'—')}</td>
+      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.salida||'—')}</td>
+      <td>${r.arranque||'—'}</td>
+      <td>${r.fin||'—'}</td>
+      <td>${r.tarimas||'—'}</td>
+      <td>${r.cajas||'—'}</td>
+      <td>${r.cubetas||'—'}</td>
+      <td>${r.confirmacion||'—'}</td>
+      <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
+      <td>${tiempoCell}</td>
+      <td>${tarCell}</td>
+    </tr>`;
   }).join('');
 
-  if(logTimer)clearInterval(logTimer);
-  const hasActive=filtered.some(r=>r.arranque&&!r.fin);
-  if(hasActive){
+  // timer live
+  const activos=filtered.filter(r=>r.arranque&&!r.fin);
+  if(activos.length){
     logTimer=setInterval(()=>{
-      filtered.filter(r=>r.arranque&&!r.fin).forEach(r=>{
-        const el=document.getElementById('timer-'+r.oc);
-        if(!el)return;
-        const secs=elapsedSince(r.arranque);
-        if(secs===null)return;
-        const over=secs>1800;
+      activos.forEach(r=>{
+        const el=document.getElementById('tmr-'+r.oc);
+        if(!el) return;
+        const s=elapsedSecs(r.arranque);
+        if(s===null) return;
+        const over=s>1800;
         el.style.color=over?'#dc2626':'#16a34a';
-        el.textContent=fmtElapsed(secs);
-        const warn=el.nextElementSibling;
-        if(over&&warn)warn.style.display='inline';
-        else if(warn)warn.style.display='none';
+        el.textContent=fmtSecs(s);
+        const w=document.getElementById('twrn-'+r.oc);
+        if(w) w.style.display=over?'inline':'none';
       });
     },1000);
   }
@@ -814,8 +844,8 @@ function renderLog(){
 
 function exportarCSV(){
   if(!records.length){alert('Sin datos para exportar.');return}
-  const cols=['OC','Proveedor','Descripción','Artículo','Fecha prog','Planta','Unidad','Semana','Mes','Hora prog','Entrada','Salida','Arranque','Fin desc','Tarimas','Cajas','Cubetas','Conf','Comentarios','Estado'];
-  const rows=records.map(r=>[r.oc,r.prov,r.desc,r.art,r.fecha,r.planta,r.unidad,r.semana,r.mes,r.hora,r.entrada,r.salida,r.arranque,r.fin,r.tarimas,r.cajas,r.cubetas,r.confirmacion,r.comentarios,r.estado].map(v=>'"'+(v||'').replace(/"/g,'""')+'"').join(','));
+  const cols=['OC','Proveedor','Desc','Art','Fecha','Planta','Unidad','Sem','Mes','Hora','Entrada','Salida','Arranque','Fin','Tarimas','Cajas','Cubetas','Conf','Comentarios','Est.Tarimas','Presentacion','Estado'];
+  const rows=records.map(r=>[r.oc,r.prov,r.desc,r.art,r.fecha,r.planta,r.unidad,r.semana,r.mes,r.hora,r.entrada,r.salida,r.arranque,r.fin,r.tarimas,r.cajas,r.cubetas,r.confirmacion,r.comentarios,r.tar_est,r.tar_pres,r.estado].map(v=>'"'+(v||'').replace(/"/g,'""')+'"').join(','));
   const csv=[cols.join(','),...rows].join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
