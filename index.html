@@ -25,7 +25,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:12px;font-weight:500;color:#7a9cd0;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .tab.active{color:#fff;border-bottom-color:#3b5fe0;background:#162850}
 .tab:hover:not(.active){color:#adc4f0}
-.content{position:relative;z-index:10;padding:16px;max-width:1200px;margin:0 auto}
+.content{position:relative;z-index:10;padding:16px;width:100%}
 .panel{display:none}.panel.active{display:block}
 .sec{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
 .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
@@ -812,22 +812,22 @@ function renderLog(){
     }
 
     return `<tr style="border-bottom:1px solid #f1f5f9">
-      <td style="padding:18px 18px;font-size:16px;font-weight:700;white-space:nowrap">${r.oc}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.fecha||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.prov||''}">${r.prov||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.unidad||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.reporte||'—')}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.entrada||'—')}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.salida||'—')}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.arranque||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.fin||'—'}</td>
-      <td style="padding:18px 18px;white-space:nowrap">${tiempoCell}</td>
-      <td style="padding:18px 18px;white-space:nowrap">${tarCell}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${tPres||'—'}</td>
-      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.confirmacion||'—'}</td>
-      <td style="padding:18px 18px;white-space:nowrap"><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
+      <td style="padding:16px 10px;font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.oc}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.fecha||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.prov||''}">${r.prov||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.planta||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.unidad||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.reporte||'—')}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.entrada||'—')}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.salida||'—')}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.arranque||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.fin||'—'}</td>
+      <td style="padding:16px 10px">${tiempoCell}</td>
+      <td style="padding:16px 10px">${tarCell}</td>
+      <td style="padding:16px 10px;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${tPres||'—'}</td>
+      <td style="padding:16px 10px;font-size:15px">${r.confirmacion||'—'}</td>
+      <td style="padding:16px 10px"><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
     </tr>`;
   }).join('');
 
