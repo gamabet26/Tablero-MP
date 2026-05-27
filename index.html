@@ -152,6 +152,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="fl"><label>Cantidad solicitada</label><div class="ro" id="c-qty">—</div></div>
     <div class="fl"><label>Tipo de material</label><div class="ro" id="c-tipo">—</div></div>
   </div>
+  <div id="c-tarimas-est" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:14px"></div>
 
   <div class="sec" style="margin-top:4px"><i class="ti ti-calendar"></i> Programación de llegada</div>
   <div class="fg">
@@ -442,7 +443,39 @@ function switchTab(n){
   if(n==='historial')renderLog();
 }
 
-function getTipo(desc){
+// Artículos Gaylor (resina en caja 740kg, 1 caja = 1 tarima)
+const GAYLOR_KEYS=['10656-01','12681-01','13790-01','15365-01','16776-01'];
+// Artículos Tambo (solventes/tintas 179kg, 4 tambos = 1 tarima)
+const TAMBO_KEYS=['04342-01','04343-01','04344-01','04345-01','14836-01','04346-01','06447-01'];
+
+function getArticuloKey(art){
+  // extrae los últimos 8 chars tipo "15365-01"
+  const m=art.match(/(\d{5}-\d{2})$/);
+  return m?m[1]:null;
+}
+
+function getSubfamilia(art){
+  // 10-AABBCC-NNNNN-01 → BB = posición 5-6
+  const m=art.match(/^\d{2}-(\d{2})(\d{2})(\d{2})-/);
+  if(!m)return null;
+  return{familia:m[1],subfamilia:m[2],unidad:m[3]};
+}
+
+function getTipo(desc,art){
+  if(art){
+    const sf=getSubfamilia(art);
+    if(sf){
+      if(sf.subfamilia==='01')return{label:'RESINA',cls:'tag-resina'};
+      if(sf.subfamilia==='02')return{label:'ADITIVO',cls:'tag-adit'};
+      if(sf.subfamilia==='03')return{label:'PIGMENTO',cls:'tag-adit'};
+      if(sf.subfamilia==='04')return{label:'TINTA',cls:'tag-tinta'};
+      if(sf.subfamilia==='05')return{label:'SOLVENTE',cls:'tag-sol'};
+      if(sf.subfamilia==='06')return{label:'CARTÓN',cls:'tag-emp'};
+      if(sf.subfamilia==='07')return{label:'EMBALAJE',cls:'tag-emp'};
+      if(sf.subfamilia==='08')return{label:'CONSUMIBLE',cls:'tag-otro'};
+    }
+  }
+  // fallback por descripción
   const d=(desc||'').toUpperCase();
   if(d.startsWith('RESINA'))return{label:'RESINA',cls:'tag-resina'};
   if(d.startsWith('TINTA'))return{label:'TINTA',cls:'tag-tinta'};
@@ -450,6 +483,78 @@ function getTipo(desc){
   if(d.startsWith('SOL'))return{label:'SOLVENTE',cls:'tag-sol'};
   if(d.startsWith('ADITIVO')||d.startsWith('PIG'))return{label:'ADITIVO',cls:'tag-adit'};
   return{label:'OTRO',cls:'tag-otro'};
+}
+
+function calcTarimas(art, qty){
+  const sf=getSubfamilia(art);
+  const key=getArticuloKey(art);
+  const q=parseFloat((qty||'0').toString().replace(/,/g,''));
+  if(!sf||isNaN(q)||q<=0)return null;
+
+  const sub=sf.subfamilia;
+
+  // RESINAS
+  if(sub==='01'){
+    if(GAYLOR_KEYS.includes(key)){
+      // Gaylor: 1 caja = 740 kg = 1 tarima → tarimas = kg / 740
+      const t=q/740;
+      return{tarimas:Math.ceil(t),detalle:`${q.toLocaleString()} kg ÷ 740 kg/caja = ${t.toFixed(1)} cajas Gaylor`,presentacion:'Gaylor'};
+    } else {
+      // Costal 25 kg, 28 costales/tarima → tarimas = kg / (25×28)
+      const costales=q/25;
+      const t=costales/28;
+      return{tarimas:Math.ceil(t),detalle:`${q.toLocaleString()} kg ÷ 25 kg/costal = ${Math.ceil(costales)} costales ÷ 28/tarima = ${t.toFixed(1)} tarimas`,presentacion:'Costal 25 kg'};
+    }
+  }
+
+  // TINTAS
+  if(sub==='04'){
+    if(TAMBO_KEYS.includes(key)){
+      const t=q/4;
+      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 179 kg/tambo = ${(q/179).toFixed(1)} tambos ÷ 4/tarima`,presentacion:'Tambo 179 kg'};
+    } else {
+      // cubeta 17 kg, 34 cubetas/tarima
+      const cubetas=q/17;
+      const t=cubetas/34;
+      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 17 kg/cubeta = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`,presentacion:'Cubeta 17 kg'};
+    }
+  }
+
+  // SOLVENTES
+  if(sub==='05'){
+    if(TAMBO_KEYS.includes(key)){
+      const tambos=q/179;
+      const t=tambos/4;
+      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 179 kg/tambo = ${tambos.toFixed(1)} tambos ÷ 4/tarima`,presentacion:'Tambo 179 kg'};
+    } else {
+      const cubetas=q/17;
+      const t=cubetas/34;
+      return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 17 kg/cubeta = ${cubetas.toFixed(1)} cubetas ÷ 34/tarima`,presentacion:'Cubeta 17 kg'};
+    }
+  }
+
+  // ADITIVOS / PIGMENTOS
+  if(sub==='02'||sub==='03'){
+    const costales=q/25;
+    const t=costales/40;
+    return{tarimas:Math.ceil(t),detalle:`${q} kg ÷ 25 kg/costal = ${Math.ceil(costales)} costales ÷ 40/tarima`,presentacion:'Costal 25 kg'};
+  }
+
+  // CARTÓN
+  if(sub==='06'){
+    const paquetes=q/100;
+    const t=paquetes/10;
+    return{tarimas:Math.ceil(t),detalle:`${q} pzs ÷ 100 pzs/paquete = ${paquetes.toFixed(1)} paquetes ÷ 10/tarima`,presentacion:'Paquete 100 pzs'};
+  }
+
+  // EMBALAJE (bolsas)
+  if(sub==='07'){
+    const cajas=q/1500;
+    const t=Math.ceil(cajas);
+    return{tarimas:t,detalle:`${q} pzs ÷ 1500 pzs/caja ≈ ${cajas.toFixed(1)} cajas ≈ ${t} tarimas`,presentacion:'Caja 1500 pzs'};
+  }
+
+  return null;
 }
 
 function getByOC(oc){return TABLERO.filter(r=>r.oc===oc.trim())}
@@ -464,12 +569,16 @@ function buscarOC(val,ctx){
   const byProv=TABLERO.filter(r=>r.prov.toLowerCase().includes(val.toLowerCase()));
   const all=[...new Map([...byOC,...byProv].map(r=>[r.oc,r])).values()].slice(0,8);
   if(!all.length){sg.style.display='none';return}
-  sg.innerHTML=all.map(r=>`<div class="oc-item" onclick="selectOC('${r.oc}','${ctx}')">
+      sg.innerHTML=all.map(r=>{
+    const tipo=getTipo(r.desc,r.art);
+    const tar=calcTarimas(r.art,r.qty);
+    return`<div class="oc-item" onclick="selectOC('${r.oc}','${ctx}')">
     <span class="oc-num">OC ${r.oc}</span>
-    <span class="tipo-tag ${getTipo(r.desc).cls}">${getTipo(r.desc).label}</span>
+    <span class="tipo-tag ${tipo.cls}">${tipo.label}</span>
+    ${tar?`<span style="font-size:10px;background:#fef9c3;color:#a16207;padding:1px 6px;border-radius:4px;font-weight:600;margin-left:4px">~${tar.tarimas} tarima${tar.tarimas!==1?'s':''}</span>`:''}
     <div class="oc-info">${r.prov}</div>
     <div class="oc-info">${r.desc.substring(0,55)}${r.desc.length>55?'...':''}</div>
-  </div>`).join('');
+  </div>`;}).join('');
   sg.style.display='block';
 }
 
