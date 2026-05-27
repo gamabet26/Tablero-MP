@@ -49,11 +49,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .qty-c label{display:block;font-size:10px;color:#64748b;margin-bottom:4px;font-weight:500}
 .qty-c input{width:100%;text-align:center;font-size:14px;font-weight:500;border:none;background:transparent;color:#1e293b;padding:2px;font-family:inherit;outline:none}
 .qty-c .ut{font-size:10px;color:#94a3b8;margin-top:2px}
-.log-t{width:100%;border-collapse:collapse;font-size:11px}
-.log-t th{background:#f8fafc;color:#64748b;padding:8px;text-align:left;font-weight:600;border-bottom:1px solid #e2e8f0;font-size:10px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.log-t td{padding:7px 8px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:11px;vertical-align:middle}
-.log-t tr:hover td{background:#f8fafc}
-.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
+.log-t{width:100%;border-collapse:collapse;font-size:14px}
+.log-t th{background:#f8fafc;color:#64748b;padding:12px 14px;text-align:left;font-weight:700;border-bottom:1px solid #e2e8f0;font-size:12px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.log-t td{padding:13px 14px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px;vertical-align:middle;white-space:nowrap}
+.log-t tr:hover td{background:#f0f6ff}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700}
 .p-d{background:#dcfce7;color:#15803d}.p-f{background:#fee2e2;color:#b91c1c}
 .p-r{background:#dbeafe;color:#1d4ed8}.p-p{background:#fef9c3;color:#a16207}
 .exp-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#1e293b;cursor:pointer;font-size:12px;font-family:inherit;margin-bottom:12px;transition:background .15s}
@@ -306,8 +306,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <button class="exp-btn" onclick="exportarCSV()"><i class="ti ti-download" style="font-size:14px"></i> Exportar CSV</button>
   </div>
-  <div style="overflow-x:auto;background:#fff;border-radius:12px;border:1px solid #e2e8f0">
-    <table class="log-t">
+  <div style="overflow-x:auto;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
+    <table class="log-t" style="min-width:1400px">
       <thead><tr>
         <th>OC #</th><th>Fecha prog.</th><th>Proveedor</th><th>Producto</th>
         <th>Planta</th><th>Unidad</th>        <th>Reporte</th><th>Entrada</th><th>Salida</th>
@@ -791,33 +791,32 @@ function renderLog(){
   const pm={pendiente:'p-p',dentro:'p-d',fuera:'p-f',recibido:'p-r'};
 
   tbody.innerHTML=filtered.map(r=>{
-    // columna tiempo descarga
     let tiempoCell='—';
     if(r.arranque && !r.fin){
       const s=elapsedSecs(r.arranque);
       const over=s!==null&&s>1800;
-      tiempoCell=`<span id="tmr-${r.oc}" style="font-weight:600;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">${s!==null?fmtSecs(s):'00:00'}</span>${over?'<span style="color:#dc2626;font-size:9px;margin-left:3px">⚠Excedido</span>':'<span id="twrn-'+r.oc+'" style="display:none;color:#dc2626;font-size:9px;margin-left:3px">⚠Excedido</span>'}`;
+      tiempoCell=`<span id="tmr-${r.oc}" style="font-weight:700;font-size:15px;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">${s!==null?fmtSecs(s):'00:00'}</span>${over?'<div style="color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</div>':'<span id="twrn-'+r.oc+'" style="display:none;color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</span>'}`;
     } else if(r.arranque && r.fin){
       const [ah,am]=r.arranque.split(':').map(Number);
       const [fh,fm]=r.fin.split(':').map(Number);
       const mins=(fh*60+fm)-(ah*60+am);
       const over=mins>30;
-      tiempoCell=`<span style="font-weight:600;color:${over?'#dc2626':'#16a34a'}">${String(mins).padStart(2,'0')}m</span>${over?' <span style="color:#dc2626;font-size:9px">⚠Excedido</span>':''}`;
+      tiempoCell=`<span style="font-weight:700;font-size:15px;color:${over?'#dc2626':'#16a34a'}">${String(mins).padStart(2,'0')}m</span>${over?' <div style="color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</div>':''}`;
     }
 
-    // columna est. tarimas — usar guardado o recalcular
+    // columna est. tarimas
     let tarCell='—';
     const tNum  = r.tar_est  || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.tarimas:null; })();
     const tPres = r.tar_pres || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.presentacion:''; })();
     if(tNum){
-      tarCell=`<span style="font-weight:700;color:#1d4ed8;font-size:13px">${tNum}</span> <span style="font-size:10px;color:#64748b">tar.</span><div style="font-size:9px;color:#94a3b8">${tPres}</div>`;
+      tarCell=`<span style="font-weight:700;color:#1d4ed8;font-size:16px">${tNum}</span><div style="font-size:11px;color:#94a3b8">${tPres}</div>`;
     }
 
     return `<tr>
-      <td><strong>${r.oc}</strong></td>
+      <td><strong style="font-size:15px">${r.oc}</strong></td>
       <td>${r.fecha||'—'}</td>
-      <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.prov||''}">${r.prov||'—'}</td>
-      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${r.prov||''}">${r.prov||'—'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${r.desc||''}">${r.desc||'—'}</td>
       <td>${r.planta||'—'}</td>
       <td>${r.unidad||'—'}</td>
       <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A</span>':(r.reporte||'—')}</td>
