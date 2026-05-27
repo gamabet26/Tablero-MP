@@ -795,42 +795,39 @@ function renderLog(){
     if(r.arranque && !r.fin){
       const s=elapsedSecs(r.arranque);
       const over=s!==null&&s>1800;
-      tiempoCell=`<span id="tmr-${r.oc}" style="font-weight:700;font-size:15px;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">${s!==null?fmtSecs(s):'00:00'}</span>${over?'<div style="color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</div>':'<span id="twrn-'+r.oc+'" style="display:none;color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</span>'}`;
+      tiempoCell=`<span id="tmr-${r.oc}" style="font-weight:700;font-size:17px;color:${over?'#dc2626':'#16a34a'};font-variant-numeric:tabular-nums">${s!==null?fmtSecs(s):'00:00'}</span>${over?'<div style="color:#dc2626;font-size:12px;font-weight:700">⚠ Excedido</div>':'<span id="twrn-'+r.oc+'" style="display:none"><div style="color:#dc2626;font-size:12px;font-weight:700">⚠ Excedido</div></span>'}`;
     } else if(r.arranque && r.fin){
       const [ah,am]=r.arranque.split(':').map(Number);
       const [fh,fm]=r.fin.split(':').map(Number);
       const mins=(fh*60+fm)-(ah*60+am);
       const over=mins>30;
-      tiempoCell=`<span style="font-weight:700;font-size:15px;color:${over?'#dc2626':'#16a34a'}">${String(mins).padStart(2,'0')}m</span>${over?' <div style="color:#dc2626;font-size:11px;font-weight:600">⚠ Excedido</div>':''}`;
+      tiempoCell=`<span style="font-weight:700;font-size:17px;color:${over?'#dc2626':'#16a34a'}">${String(mins).padStart(2,'0')}m</span>${over?'<div style="color:#dc2626;font-size:12px;font-weight:700">⚠ Excedido</div>':''}`;
     }
-
-    // columna est. tarimas
+    // tarimas
     let tarCell='—';
     const tNum  = r.tar_est  || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.tarimas:null; })();
     const tPres = r.tar_pres || (()=>{ const t=calcTarimas(r.art,r.qty); return t?t.presentacion:''; })();
     if(tNum){
-      tarCell=`<span style="font-weight:700;color:#1d4ed8;font-size:16px">${tNum}</span><div style="font-size:11px;color:#94a3b8">${tPres}</div>`;
+      tarCell=`<span style="font-weight:700;color:#1d4ed8;font-size:20px">${tNum}</span>`;
     }
 
-    return `<tr>
-      <td><strong style="font-size:15px">${r.oc}</strong></td>
-      <td>${r.fecha||'—'}</td>
-      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${r.prov||''}">${r.prov||'—'}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${r.desc||''}">${r.desc||'—'}</td>
-      <td>${r.planta||'—'}</td>
-      <td>${r.unidad||'—'}</td>
-      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A</span>':(r.reporte||'—')}</td>
-      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.entrada||'—')}</td>
-      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.salida||'—')}</td>
-      <td>${r.arranque||'—'}</td>
-      <td>${r.fin||'—'}</td>
-      <td>${r.tar_est||'—'}</td>
-      <td>${r.tar_pres ? `<span style="font-size:10px;color:#64748b">${r.tar_pres}</span>` : '—'}</td>
-      <td>—</td>
-      <td>${r.confirmacion||'—'}</td>
-      <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
-      <td>${tiempoCell}</td>
-      <td>${tarCell}</td>
+    return `<tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:18px 18px;font-size:16px;font-weight:700;white-space:nowrap">${r.oc}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.fecha||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.prov||''}">${r.prov||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.unidad||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.reporte||'—')}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.entrada||'—')}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.planta==='CEDIS'?'<span style="color:#94a3b8;font-style:italic;font-size:13px">N/A</span>':(r.salida||'—')}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.arranque||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.fin||'—'}</td>
+      <td style="padding:18px 18px;white-space:nowrap">${tiempoCell}</td>
+      <td style="padding:18px 18px;white-space:nowrap">${tarCell}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${tPres||'—'}</td>
+      <td style="padding:18px 18px;font-size:15px;white-space:nowrap">${r.confirmacion||'—'}</td>
+      <td style="padding:18px 18px;white-space:nowrap"><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
     </tr>`;
   }).join('');
 
