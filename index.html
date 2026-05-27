@@ -204,6 +204,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="sec" style="margin-top:4px">Control de acceso</div>
   <div class="ts-grid">
     <div>
+      <label style="font-size:11px;color:#64748b;display:block;margin-bottom:5px">📞 Proveedor se reporta</label>
+      <button class="btn-ts" id="btn-reporte" onclick="stampTime('reporte')">
+        <i class="ti ti-phone-incoming" style="font-size:16px"></i>
+        <span style="font-weight:500">Registrar reporte</span>
+        <span class="tt" id="ts-reporte"></span>
+      </button>
+    </div>
+    <div></div>
+  </div>
+  <div class="ts-grid">
+    <div>
       <label style="font-size:11px;color:#64748b;display:block;margin-bottom:5px">Hora de llegada confirmada</label>
       <button class="btn-ts" id="btn-entrada" onclick="stampTime('entrada')">
         <i class="ti ti-login" style="font-size:16px"></i>
@@ -299,9 +310,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <table class="log-t">
       <thead><tr>
         <th>OC #</th><th>Fecha prog.</th><th>Proveedor</th><th>Producto</th>
-        <th>Planta</th><th>Unidad</th><th>Entrada</th><th>Salida</th>
-        <th>Arranque</th><th>Fin desc.</th><th>Tar.</th><th>Cajas</th><th>Cub.</th>
-        <th>Conf.</th><th>Estado</th><th>⏱ Desc.</th><th>📦 Est. Tarimas</th>
+        <th>Planta</th><th>Unidad</th>        <th>Reporte</th><th>Entrada</th><th>Salida</th>
+        <th>Arranque</th><th>Fin desc.</th>        <th>Tar. Est.</th><th>Presentación</th><th>Conf.</th><th>Estado</th><th>⏱ Desc.</th><th>📦 Est. Tarimas</th>
       </tr></thead>
       <tbody id="log-body"></tbody>
     </table>
@@ -721,6 +731,7 @@ function guardarVigilancia(){
   if(!oc){alert('Ingresa el número de OC');return}
   const idx=records.findIndex(r=>r.oc===oc);
   if(idx<0){alert('OC no encontrada. Regístrala en Compras primero.');return}
+  records[idx].reporte = stamps['reporte']||records[idx].reporte;
   records[idx].entrada = stamps['entrada']||records[idx].entrada;
   records[idx].salida  = stamps['salida'] ||records[idx].salida;
   records[idx].estado  = records[idx].salida?'fuera':'dentro';
@@ -809,13 +820,14 @@ function renderLog(){
       <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc||''}">${r.desc||'—'}</td>
       <td>${r.planta||'—'}</td>
       <td>${r.unidad||'—'}</td>
+      <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A</span>':(r.reporte||'—')}</td>
       <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.entrada||'—')}</td>
       <td>${r.planta==='CEDIS'?'<span style="font-size:10px;color:#94a3b8;font-style:italic">N/A CEDIS</span>':(r.salida||'—')}</td>
       <td>${r.arranque||'—'}</td>
       <td>${r.fin||'—'}</td>
-      <td>${r.tarimas||'—'}</td>
-      <td>${r.cajas||'—'}</td>
-      <td>${r.cubetas||'—'}</td>
+      <td>${r.tar_est||'—'}</td>
+      <td>${r.tar_pres ? `<span style="font-size:10px;color:#64748b">${r.tar_pres}</span>` : '—'}</td>
+      <td>—</td>
       <td>${r.confirmacion||'—'}</td>
       <td><span class="pill ${pm[r.estado]||'p-p'}">${r.estado||'pendiente'}</span></td>
       <td>${tiempoCell}</td>
